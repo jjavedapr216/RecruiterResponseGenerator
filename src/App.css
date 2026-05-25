@@ -1,0 +1,550 @@
+/* ── Design tokens ───────────────────────────────────────────────────── */
+:root {
+  --bg:           #f1f5f9;
+  --surface:      #ffffff;
+  --surface-2:    #f8fafc;
+  --border:       #e2e8f0;
+  --text:         #0f172a;
+  --text-2:       #475569;
+  --text-3:       #94a3b8;
+  --primary:      #6366f1;
+  --primary-h:    #4f46e5;
+  --primary-fg:   #ffffff;
+  --success:      #10b981;
+  --success-bg:   #ecfdf5;
+  --success-bd:   #a7f3d0;
+  --warn:         #f59e0b;
+  --warn-bg:      #fffbeb;
+  --warn-bd:      #fde68a;
+  --danger:       #ef4444;
+  --danger-bg:    #fef2f2;
+  --radius:       8px;
+  --radius-sm:    4px;
+  --shadow:       0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --mono:         ui-monospace, Consolas, 'Courier New', monospace;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  box-shadow: var(--shadow);
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-logo {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.app-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+.app-sub {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 1px;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-security {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--success-bg);
+  color: #059669;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--success-bd);
+}
+
+.btn-clear-all {
+  background: var(--surface);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.btn-clear-all:hover {
+  background: var(--danger-bg);
+}
+
+/* ── Three-pane grid ─────────────────────────────────────────────────── */
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Pane card ───────────────────────────────────────────────────────── */
+.pane {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.pane-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.pane-icon { font-size: 15px; }
+
+.pane-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pane-hint {
+  padding: 5px 14px;
+  font-size: 11px;
+  color: var(--text-3);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.pane-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pane-body-scroll {
+  overflow-y: auto;
+}
+
+.pane-footer {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+
+.pane-footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.pane-footer-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── Textarea ────────────────────────────────────────────────────────── */
+.pane-textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text);
+  background: transparent;
+  padding: 12px 14px;
+}
+
+.pane-textarea::placeholder {
+  color: var(--text-3);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* ── Parsed preview (left pane footer) ──────────────────────────────── */
+.parsed-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.parsed-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  overflow: hidden;
+}
+
+.parsed-key {
+  color: var(--text-2);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+
+.parsed-sep {
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+.parsed-val {
+  color: var(--primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.parsed-more {
+  font-size: 11px;
+  color: var(--text-3);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Generate button & hint ─────────────────────────────────────────── */
+.generate-hint {
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.generate-hint-info {
+  color: var(--primary);
+}
+
+.generate-hint-warn {
+  color: var(--warn);
+}
+
+/* Pulse the border of the middle pane when master data is ready but email is empty */
+.pane-awaiting {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+  animation: pane-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes pane-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12); }
+  50%       { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25); }
+}
+
+.textarea-waiting::placeholder {
+  color: var(--text-3);
+}
+
+.btn-generate {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary);
+  color: var(--primary-fg);
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn-generate:hover:not(:disabled) {
+  background: var(--primary-h);
+}
+
+.btn-generate:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-generate:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Shared button styles ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.btn-outline {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: var(--text-3);
+  color: var(--text);
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.badge-warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.badge-neutral {
+  background: var(--surface-2);
+  color: var(--text-3);
+  border: 1px solid var(--border);
+}
+
+/* ── Mask toggle ─────────────────────────────────────────────────────── */
+.toggle-mask {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.toggle-mask input[type='checkbox'] {
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+/* ── Results table ───────────────────────────────────────────────────── */
+.results-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.results-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-2);
+}
+
+.results-table th {
+  padding: 7px 10px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-3);
+  border-bottom: 2px solid var(--border);
+  overflow: hidden;
+}
+
+/* Column widths: Requested 30% | Matched As 30% | Value 40% */
+.results-table th:nth-child(1),
+.results-table td:nth-child(1) { width: 30%; }
+.results-table th:nth-child(2),
+.results-table td:nth-child(2) { width: 30%; }
+.results-table th:nth-child(3),
+.results-table td:nth-child(3) { width: 40%; }
+
+.results-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.results-table tbody tr:hover td {
+  background: var(--surface-2);
+}
+
+.row-unmatched td {
+  background: var(--danger-bg);
+}
+.row-unmatched:hover td {
+  background: #fee2e2;
+}
+
+.td-req {
+  color: var(--text-2);
+  font-size: 11.5px;
+}
+
+.td-canon {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.td-canon-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.lock-icon {
+  font-size: 11px;
+  opacity: 0.7;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.td-val {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.td-empty {
+  color: var(--danger);
+  font-style: italic;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+/* ── Excel file pill ─────────────────────────────────────────────────── */
+.excel-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--success-bg);
+  border: 1px solid var(--success-bd);
+  color: #059669;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.excel-pill-clear {
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.excel-pill-clear:hover { opacity: 1; }
+
+/* ── Empty state ─────────────────────────────────────────────────────── */
+.pane-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.empty-sub {
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.6;
+}
