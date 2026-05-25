@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { MatchedField } from '../lib/matcher';
 
 interface Props {
@@ -10,9 +10,21 @@ type CopiedKey = 'email' | 'table' | null;
 export default function RightPane({ results }: Props) {
   const [maskSensitive, setMaskSensitive] = useState(false);
   const [copied, setCopied] = useState<CopiedKey>(null);
+  const [overrides, setOverrides] = useState<Map<number, string>>(new Map());
 
-  const display = (r: MatchedField) =>
-    maskSensitive && r.sensitive && r.value ? '••••' : r.value;
+  // Reset overrides whenever a new result set arrives
+  useEffect(() => { setOverrides(new Map()); }, [results]);
+
+  const getVal = (r: MatchedField, i: number): string =>
+    overrides.has(i) ? overrides.get(i)! : (r.value ?? '');
+
+  const display = (r: MatchedField, i: number): string => {
+    const val = getVal(r, i);
+    return maskSensitive && r.sensitive && val ? '••••' : val;
+  };
+
+  const setOverride = (i: number, val: string) =>
+    setOverrides(m => { const nm = new Map(m); nm.set(i, val); return nm; });
 
   const flash = (key: CopiedKey) => {
     setCopied(key);
@@ -21,10 +33,9 @@ export default function RightPane({ results }: Props) {
 
   const copyAsEmail = () => {
     const lines = results
-      .filter(r => r.value)
-      .map(r => `${r.canonicalLabel}: ${display(r)}`);
-    const body =
-      'Please find the requested details below:\n\n' + lines.join('\n');
+      .filter((r, i) => getVal(r, i))
+      .map((r, i) => `${r.canonicalLabel}: ${display(r, i)}`);
+    const body = 'Please find the requested details below:\n\n' + lines.join('\n');
     navigator.clipboard.writeText(body);
     flash('email');
   };
@@ -35,11 +46,12 @@ export default function RightPane({ results }: Props) {
     const tdFieldStyle = cell + 'background:#fafafa;font-weight:600;white-space:nowrap;';
     const tdValStyle = cell;
 
+    // Fix 1: use requestedLabel (recruiter's label)
+    // Fix 2: include ALL rows; empty string for not-found so user can fill manually
     const rows = results
-      .filter(r => r.value)
-      .map(r => {
-        const val = display(r) || '';
-        return `<tr><td style="${tdFieldStyle}">${escHtml(r.canonicalLabel)}</td><td style="${tdValStyle}">${escHtml(val)}</td></tr>`;
+      .map((r, i) => {
+        const val = display(r, i);
+        return `<tr><td style="${tdFieldStyle}">${escHtml(r.requestedLabel)}</td><td style="${tdValStyle}">${escHtml(val)}</td></tr>`;
       })
       .join('');
 
@@ -49,11 +61,9 @@ export default function RightPane({ results }: Props) {
       const blob = new Blob([html], { type: 'text/html' });
       await navigator.clipboard.write([new ClipboardItem({ 'text/html': blob })]);
     } catch {
-      // Fallback: copy as tab-separated plain text
       const header = 'Field\tValue';
       const plainRows = results
-        .filter(r => r.value)
-        .map(r => `${r.canonicalLabel}\t${display(r) || ''}`)
+        .map((r, i) => `${r.requestedLabel}\t${display(r, i)}`)
         .join('\n');
       navigator.clipboard.writeText([header, plainRows].join('\n'));
     }
@@ -63,11 +73,11 @@ export default function RightPane({ results }: Props) {
   const downloadCSV = () => {
     const escape = (s: string) => `"${s.replace(/"/g, '""')}"`;
     const header = 'Requested Field,Matched As,Value';
-    const rows = results.map(r =>
+    const rows = results.map((r, i) =>
       [
         escape(r.requestedLabel),
         escape(r.canonicalLabel),
-        escape(display(r) || ''),
+        escape(getVal(r, i)),
       ].join(','),
     );
     const csv = [header, ...rows].join('\n');
@@ -147,8 +157,15 @@ export default function RightPane({ results }: Props) {
                     )}
                   </div>
                 </td>
-                <td className={`td-val ${!r.value ? 'td-empty' : ''}`}>
-                  {display(r) || <em>not found</em>}
+                <td className="td-val">
+                  <input
+                    className="td-val-input"
+                    value={display(r, i)}
+                    readOnly={maskSensitive && r.sensitive && !!getVal(r, i)}
+                    onChange={e => setOverride(i, e.target.value)}
+                    placeholder={!r.value ? 'not found — click to fill' : ''}
+                    title={!r.value ? 'Not matched — type your value here' : 'Click to edit'}
+                  />
                 </td>
               </tr>
             ))}
