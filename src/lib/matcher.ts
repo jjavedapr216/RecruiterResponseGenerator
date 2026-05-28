@@ -139,9 +139,8 @@ export function matchFields(
       }
     }
 
-    if (hit) {
+    if (hit && !usedCanonicals.has(hit.def.id)) {
       const { def } = hit;
-      if (usedCanonicals.has(def.id)) continue;
       usedCanonicals.add(def.id);
 
       let value = findValueInMaster(def, masterData) ?? '';
@@ -160,7 +159,9 @@ export function matchFields(
         matched: !!value,
       });
     } else {
-      // No canonical match — try direct key lookup against master data
+      // No canonical match OR canonical already used (e.g. "Alternate Phone" after "Phone"
+      // already consumed the phone canonical) — fall through to direct key lookup so the
+      // second request still gets a value rather than being silently dropped.
       let directValue: string | null = null;
       let directKey: string | null = null;
       let bestScore = 50;

@@ -160,6 +160,7 @@ function cleanFieldName(s: string): string {
     .replace(/\s*\[.*?\]\s*/g, ' ')
     .replace(/[ÿ�]+/g, '')
     .replace(/\s+/g, ' ')
+    .replace(/\.+$/, '')        // strip trailing abbreviation periods: "no.", "dept.", "ext."
     .trim();
 }
 
@@ -173,8 +174,9 @@ function isEmptyOrPlaceholder(s: string): boolean {
 function isLikelyFieldName(s: string): boolean {
   if (s.length < 2 || s.length > 90) return false;
   if (s.split(/\s+/).length > 14) return false;
-  // Reject phrases that are clearly instructions, not field names
-  if (/\b(?:please|provide|share|send|submit|confirm|fill|kindly|required|mandatory)\b/i.test(s)) return false;
+  // Reject lines that START with an instruction verb — "Please share..." is an instruction;
+  // "Skills required" or "LinkedIn (mandatory)" are valid field labels with a descriptor word inside.
+  if (/^(?:please|provide|share|send|submit|confirm|fill|kindly|required|mandatory)\b/i.test(s)) return false;
   if (/[.!]$/.test(s)) return false;
   return true;
 }
